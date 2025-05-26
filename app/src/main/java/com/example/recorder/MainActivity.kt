@@ -1,7 +1,6 @@
 package com.example.recorder
 
 import android.Manifest
-import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Button
@@ -21,7 +20,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         val REQUEST_RECORD_AUDIO_PERMISSION = 200
-        var permissionToRecordAccepted = false
 
         while (!checkPermissionFromDevice()) {
             if(ContextCompat.checkSelfPermission(this,
@@ -29,8 +27,6 @@ class MainActivity : ComponentActivity() {
                 ActivityCompat.requestPermissions(this,
                     arrayOf(Manifest.permission.RECORD_AUDIO),
                     REQUEST_RECORD_AUDIO_PERMISSION)
-            } else {
-                permissionToRecordAccepted = true
             }
         }
 
