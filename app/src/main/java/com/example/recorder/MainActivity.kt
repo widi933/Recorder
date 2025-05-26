@@ -23,33 +23,19 @@ class MainActivity : ComponentActivity() {
         val REQUEST_RECORD_AUDIO_PERMISSION = 200
         var permissionToRecordAccepted = false
 
-        if(ContextCompat.checkSelfPermission(this,
-                Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.RECORD_AUDIO),
-                REQUEST_RECORD_AUDIO_PERMISSION)
-        } else {
-            permissionToRecordAccepted = true
+        while (!checkPermissionFromDevice()) {
+            if(ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                    arrayOf(Manifest.permission.RECORD_AUDIO),
+                    REQUEST_RECORD_AUDIO_PERMISSION)
+            } else {
+                permissionToRecordAccepted = true
+            }
         }
 
         val buStart = findViewById<Button>(R.id.buStart)
         val buStop = findViewById<Button>(R.id.buStop)
-
-        if(!checkPermissionFromDevice()) {
-            // AlertDialog erstellen
-            val builder = AlertDialog.Builder(this)
-            builder.setMessage("Dies ist eine wichtige Nachricht!")
-                .setTitle("Wichtige Information")
-                .setCancelable(false)
-                .setPositiveButton("OK") { dialog, id -> // Aktion, die ausgeführt wird, wenn auf "OK" geklickt wird
-                    dialog.dismiss()
-                }
-
-
-            // AlertDialog anzeigen
-            val alert = builder.create()
-            alert.show()
-        }
 
         audioRecorder = AudioRecorder(this)
 
