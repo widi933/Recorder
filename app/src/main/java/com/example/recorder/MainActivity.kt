@@ -1,25 +1,30 @@
 package com.example.recorder
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import java.io.File
 
 
 class MainActivity : ComponentActivity() {
 
     private lateinit var audioRecorder : AudioRecorder
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         enableEdgeToEdge()
 
         val REQUEST_RECORD_AUDIO_PERMISSION = 200
+        var recordedFile: File
 
         while (!checkPermissionFromDevice()) {
             if(ContextCompat.checkSelfPermission(this,
@@ -32,6 +37,7 @@ class MainActivity : ComponentActivity() {
 
         val buStart = findViewById<Button>(R.id.buStart)
         val buStop = findViewById<Button>(R.id.buStop)
+        val buProcess = findViewById<Button>(R.id.buProcess)
 
         audioRecorder = AudioRecorder(this)
 
@@ -42,6 +48,11 @@ class MainActivity : ComponentActivity() {
 
         buStop.setOnClickListener {
             audioRecorder.stopRecording()
+            recordedFile = audioRecorder.getOutputFile()
+
+            if(recordedFile.exists() && recordedFile.length() > 0) {
+                buProcess.visibility = View.VISIBLE
+            }
         }
     }
 
